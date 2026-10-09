@@ -12,3 +12,4 @@
 - Xuất báo cáo HTML (in / lưu PDF), CSV (Excel), TXT
 - Logo và dòng bản quyền trong app và báo cáo
 - Cài đặt như app trên điện thoại (PWA), giữ màn hình sáng khi đang nghe
+- Tài liệu README tiếng Việt và tiếng Nhật (README.ja.md)
