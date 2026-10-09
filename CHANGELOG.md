@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.2] - 2026-10-09
+
+### Added
+- Gói Android (APK / AAB) tạo bằng PWABuilder, package `io.github.nguyenbi.translateai`, trong thư mục `android/`
+
 ## [1.0.1] - 2026-10-09
 
 ### Added

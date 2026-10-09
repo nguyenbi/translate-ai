@@ -53,6 +53,7 @@
 │       ├── logo.js         # Base64 埋め込み済みのロゴ（自動生成）
 │       ├── app.js          # 音声認識・翻訳・履歴・画面制御
 │       └── report.js       # レポート出力（HTML / CSV / TXT）
+├── android/                # APK / AAB（署名キー android/signing/ は Git 管理対象外）
 └── scripts/make-logo.ps1   # logo.png を logo.js に埋め込むスクリプト
 ```
 
@@ -68,6 +69,7 @@ JavaScript は ES モジュールではなく通常のスクリプトとして `
 ## スマートフォンへのインストール
 
 - **Android**：Chrome でリンクを開く → メニュー ⋮ →「ホーム画面に追加」または「アプリをインストール」
+- **Android（APK）**：[android/README.md](android/README.md) を参照
 - **iPhone**：Safari でリンクを開く → 共有ボタン →「ホーム画面に追加」
 
 ## ロゴの差し替え
