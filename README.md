@@ -27,6 +27,7 @@ Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi 
 │       ├── logo.js         # Logo đã nhúng base64 (sinh tự động)
 │       ├── app.js          # Nhận dạng giọng nói, dịch, lịch sử, giao diện
 │       └── report.js       # Xuất báo cáo HTML / CSV / TXT
+├── android/                # APK / AAB (khoá ký trong android/signing/ không đưa lên git)
 └── scripts/make-logo.ps1   # Nhúng logo.png vào logo.js
 ```
 
@@ -36,6 +37,7 @@ nên app chạy được cả khi mở trực tiếp `index.html` từ ổ đĩa
 ## Cài đặt trên điện thoại
 
 - **Android**: mở link bằng Chrome → menu ⋮ → *Thêm vào màn hình chính* / *Cài đặt ứng dụng*
+- **Android (APK)**: xem [android/README.md](android/README.md)
 - **iPhone**: mở link bằng Safari → nút Chia sẻ → *Thêm vào MH chính*
 
 ## Logo bản quyền

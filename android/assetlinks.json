@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.nguyenbi.translateai",
+        "sha256_cert_fingerprints": ["68:32:C0:64:57:CA:45:6C:4F:A3:EE:18:8F:4C:A1:8F:47:A6:54:51:9B:21:07:21:1C:6C:43:98:B0:82:3B:1E"]
+      }
+    }]

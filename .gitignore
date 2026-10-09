@@ -1,2 +1,8 @@
 # Source photo for the logo (only the embedded assets/js/logo.js is published)
 assets/img/logo.png
+
+# Android signing key and passwords: NEVER commit (public repo)
+android/signing/
+*.keystore
+*.jks
+signing-key-info.txt
