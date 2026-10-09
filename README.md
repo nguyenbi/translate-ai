@@ -1,5 +1,7 @@
 # Dịch Trực Tiếp / ライブ翻訳
 
+**Tiếng Việt** | [日本語](README.ja.md)
+
 Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi dịch trực tiếp, hiện phụ đề và có thể đọc to bản dịch.
 
 - Nhận dạng giọng nói: Web Speech API của trình duyệt (cần Internet)
