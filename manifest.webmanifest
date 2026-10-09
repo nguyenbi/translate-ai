@@ -1,16 +1,36 @@
 {
+  "id": "/translate-ai/",
   "name": "Dịch Trực Tiếp",
   "short_name": "Dịch Live",
-  "description": "Nghe âm thanh xung quanh qua micro và dịch trực tiếp",
+  "description": "Nghe âm thanh xung quanh hoặc âm thanh trong máy và dịch trực tiếp (Nhật, Việt, Anh, Trung, Hàn, Thái)",
+  "lang": "vi",
+  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#111418",
-  "theme_color": "#111418",
+  "background_color": "#0d0f1a",
+  "theme_color": "#0d0f1a",
+  "categories": ["productivity", "utilities", "education"],
   "icons": [
-    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/phone-vi.png",
+      "sizes": "1080x2340",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dịch trực tiếp tiếng Nhật sang tiếng Việt trên điện thoại"
+    },
+    {
+      "src": "assets/screenshots/desktop-ja.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ライブ翻訳（日本語画面）"
+    }
   ]
 }

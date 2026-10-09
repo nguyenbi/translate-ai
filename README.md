@@ -20,6 +20,7 @@ Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi 
 │   ├── css/style.css       # Giao diện (sáng/tối)
 │   ├── icons/              # Icon app 192/512px
 │   ├── img/logo.png        # Ảnh logo gốc (không đưa lên git)
+│   ├── screenshots/        # Ảnh chụp màn hình dùng trong manifest
 │   └── js/
 │       ├── config.js       # AUTHOR (tên bản quyền), danh sách ngôn ngữ
 │       ├── i18n.js         # Chữ hiển thị tiếng Việt / tiếng Nhật
