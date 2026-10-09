@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2026-10-09
+
+### Added
+- Manifest: `id`, `lang`, `categories` và ảnh chụp màn hình (điện thoại / PC) để đóng gói APK và hiện trong hộp thoại cài đặt
+
 ## [1.0.0] - 2026-10-09
 
 ### Added
