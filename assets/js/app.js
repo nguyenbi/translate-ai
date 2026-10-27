@@ -65,6 +65,7 @@ function applyUi() {
   document.querySelectorAll('#uiLang button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.ui === ui));
   $('credit').textContent = t.credit(new Date().getFullYear(), AUTHOR);
   $('pip').title = t.pip;
+  $('installBtn').title = t.install;
   syncTheme();
   setStatus(statusKey);
 }
@@ -371,6 +372,32 @@ document.querySelectorAll('#clearMenu [data-hours]').forEach((b) => b.onclick = 
   clearHistory(+b.dataset.hours, b.textContent);
 });
 document.addEventListener('click', (e) => { if (!e.target.closest('#clearMenu')) $('clearMenu').open = false; });
+
+// ---------- Install app: APK for Android, "Add to Home Screen" steps for iPhone, browser install on PC ----------
+// iOS only allows apps from the App Store, so iPhone users install the web app from Safari instead.
+const installDlg = $('installDlg');
+const os = /iphone|ipad|ipod/i.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1) ? 'ios'
+  : /android/i.test(navigator.userAgent) ? 'android' : 'desktop';
+let installPrompt = null; // Chrome / Edge offer their own install prompt for the PWA
+addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installPrompt = e; $('pwaInstall').hidden = false; });
+addEventListener('appinstalled', () => { installPrompt = null; $('pwaInstall').hidden = true; });
+$('apkLink').href = APK_URL;
+// Already running as an installed app: nothing to offer.
+if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) $('installBtn').hidden = true;
+$('installBtn').onclick = () => {
+  installDlg.querySelectorAll('.inst').forEach((d) => { d.open = d.dataset.os === os; });
+  // Show the user's own platform first.
+  installDlg.querySelector(`.inst[data-os="${os}"]`).after(...[...installDlg.querySelectorAll('.inst')].filter((d) => d.dataset.os !== os));
+  installDlg.showModal();
+};
+$('pwaInstall').onclick = async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt = null;
+  $('pwaInstall').hidden = true;
+};
+$('installClose').onclick = () => installDlg.close();
 
 // ---------- Floating caption window (Document Picture-in-Picture: Chrome / Edge on desktop) ----------
 // The live card itself moves into an always-on-top window and comes back when it closes,

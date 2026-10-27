@@ -7,6 +7,9 @@ Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi 
 - Nhận dạng giọng nói: Web Speech API của trình duyệt (cần Internet)
 - Dịch: Google Translate (bản miễn phí), dự phòng MyMemory
 - Ngôn ngữ: Nhật, Việt, Anh, Trung, Hàn, Thái — giao diện tiếng Việt / tiếng Nhật
+- Cài app (nút ở góc trên): APK cho Android (`android/`), "Thêm vào MH chính" từ Safari cho iPhone / iPad
+  (Apple không cho cài file từ website), cài từ Chrome / Edge trên máy tính.
+  Khi build APK mới, sửa `APK_URL` trong `assets/js/config.js`.
 - Cửa sổ nổi (Chrome / Edge trên máy tính): bung khung phụ đề ra cửa sổ nhỏ luôn nằm trên cùng
 - Xuất báo cáo: HTML (in ra PDF), CSV (Excel), TXT
 - Báo cáo AI: tóm tắt, ý chính, quyết định, việc cần làm, thuật ngữ song ngữ, kèm bản ghi đầy đủ.

@@ -4,6 +4,8 @@
 
 ### Added
 - Cửa sổ nổi (máy tính, Chrome / Edge): nút ở góc khung phụ đề bung phụ đề ra một cửa sổ nhỏ luôn nằm trên cùng
+- Nút Cài app ở góc trên: tải APK cho Android, hướng dẫn "Thêm vào MH chính" cho iPhone / iPad, cài app trên máy tính
+  (tự mở đúng mục theo loại máy)
 - Thông báo nổi (toast) cho tiến trình và lỗi của Báo cáo AI, kèm % khi Chrome tải model AI lần đầu
 
 ### Fixed
