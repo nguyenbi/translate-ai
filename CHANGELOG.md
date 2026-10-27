@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.0] - 2026-10-27
 
 ### Added
 - Cửa sổ nổi (máy tính, Chrome / Edge): nút ở góc khung phụ đề bung phụ đề ra một cửa sổ nhỏ luôn nằm trên cùng
