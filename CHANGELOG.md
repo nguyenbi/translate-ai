@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.3] - 2026-10-27
+
+### Fixed
+- Bản mới hiện ngay sau khi deploy: service worker lấy file mới từ mạng trước, chỉ dùng cache khi mất mạng,
+  và không còn lưu nhầm file cũ từ bộ nhớ đệm HTTP của trình duyệt
+
 ## [1.1.2] - 2026-10-27
 
 ### Added

@@ -1,6 +1,6 @@
-// Caches the app shell so it opens instantly; translation itself always needs the network.
-// Must stay at the site root so its scope covers the whole app.
-const CACHE = 'live-translate-v10';
+// Network-first: always serve the latest deployed files, and fall back to the cache only when offline.
+// Translation itself always needs the network. Must stay at the site root so its scope covers the whole app.
+const CACHE = 'live-translate-v11';
 const SHELL = [
   './',
   'index.html',
@@ -17,7 +17,9 @@ const SHELL = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)));
+  // cache: 'reload' skips the browser's HTTP cache (GitHub Pages sends max-age=600), so a new
+  // version never stores the files of the previous one.
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))));
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) => {
@@ -26,6 +28,13 @@ self.addEventListener('activate', (e) => {
 });
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
-  if (url.origin !== location.origin) return; // translation APIs: network only
-  e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request)));
+  if (e.request.method !== 'GET' || url.origin !== location.origin) return; // translation / AI APIs: network only
+  e.respondWith(
+    fetch(e.request, { cache: 'no-cache' })
+      .then((res) => {
+        if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); }
+        return res;
+      })
+      .catch(() => caches.match(e.request, { ignoreSearch: true })),
+  );
 });
