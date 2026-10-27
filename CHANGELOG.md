@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.1.2] - 2026-10-27
 
 ### Added
 - Nút đổi giao diện ở góc trên: Tự động (theo máy) → Sáng → Tối; lưu lựa chọn trong trình duyệt
