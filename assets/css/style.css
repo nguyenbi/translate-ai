@@ -170,6 +170,28 @@ h2 { margin: 0; font-size: 15px; font-weight: 700; }
   border: 0; background: none; text-align: left; padding: 10px 12px; border-radius: 10px; font-size: 14px;
 }
 .export .menu button:hover { background: var(--accent-soft); color: var(--accent); }
+.export .menu hr { width: 100%; margin: 4px 0; border: 0; border-top: 1px solid var(--border); }
+.export .menu .ai-item { color: var(--accent); font-weight: 600; }
+
+/* AI settings dialog */
+.dlg {
+  width: min(440px, calc(100vw - 32px)); padding: 22px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg); color: var(--text); box-shadow: var(--shadow);
+}
+.dlg::backdrop { background: rgba(10, 12, 24, .45); backdrop-filter: blur(3px); }
+.dlg h3 { margin: 0 0 6px; font-size: 18px; }
+.dlg-desc, .dlg-note { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.field input, .field select {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); font-size: 15px; font-weight: 400;
+}
+.field input:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.dlg-actions { display: flex; align-items: center; gap: 6px; }
+.dlg-actions span { flex: 1; }
+.primary {
+  border: 0; border-radius: 99px; padding: 9px 20px; font-weight: 600; color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
 .credit {
   display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 18px;
   font-size: 12px; color: var(--muted);

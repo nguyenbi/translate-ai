@@ -1,6 +1,6 @@
 // Caches the app shell so it opens instantly; translation itself always needs the network.
 // Must stay at the site root so its scope covers the whole app.
-const CACHE = 'live-translate-v6';
+const CACHE = 'live-translate-v7';
 const SHELL = [
   './',
   'index.html',
@@ -11,6 +11,7 @@ const SHELL = [
   'assets/js/i18n.js',
   'assets/js/app.js',
   'assets/js/report.js',
+  'assets/js/ai-report.js',
   'assets/icons/icon-192.png',
   'assets/icons/icon-512.png',
 ];

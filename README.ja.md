@@ -16,6 +16,7 @@
 | 読み上げ | 翻訳結果を音声で読み上げ（読み上げ中はマイクを一時停止） |
 | 履歴 | ブラウザに最大 500 件保存、1 文ずつコピー可能 |
 | レポート出力 | HTML（印刷・PDF 保存）、CSV（Excel）、TXT |
+| AI レポート | 要約・要点・決定事項・ToDo・用語集を全文記録付きで出力。ご自身の Anthropic API キー（「レポート出力 → AI設定」で入力、ブラウザ内にのみ保存し `api.anthropic.com` にだけ送信）で Claude を使用。キーがない場合は Chrome 内蔵 AI（Gemini Nano、PC 版 Chrome のみ、直近約 6,000 文字まで） |
 | インストール | スマートフォンのホーム画面に追加してアプリとして利用可能 |
 
 ## 使用技術
@@ -52,7 +53,8 @@
 │       ├── i18n.js         # 画面表示文言（ベトナム語／日本語）
 │       ├── logo.js         # Base64 埋め込み済みのロゴ（自動生成）
 │       ├── app.js          # 音声認識・翻訳・履歴・画面制御
-│       └── report.js       # レポート出力（HTML / CSV / TXT）
+│       ├── report.js       # レポート出力（HTML / CSV / TXT）
+│       └── ai-report.js    # AI レポート（Claude API／Chrome 内蔵 AI）、AI 設定ダイアログ
 ├── android/                # APK / AAB（署名キー android/signing/ は Git 管理対象外）
 └── scripts/make-logo.ps1   # logo.png を logo.js に埋め込むスクリプト
 ```
