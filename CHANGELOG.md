@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Extension Chrome / Edge (cài thủ công): app trong thanh bên, nghe âm thanh của tab không cần chia sẻ màn hình,
+  trang cấp quyền micro; script đóng gói `scripts/build-extension.ps1`
+
+### Changed
+- Đoạn script chọn giao diện Sáng / Tối chuyển từ `index.html` sang `assets/js/theme-init.js` (extension không cho script viết trong trang)
+
 ## [1.2.0] - 2026-10-27
 
 ### Added
