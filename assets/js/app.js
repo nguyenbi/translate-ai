@@ -175,14 +175,32 @@ function speak(text) {
   speechSynthesis.speak(u);
 }
 
-let interimTimer = null, hearTimer = null;
+// The caption boxes have a fixed height; keep the newest line in view.
+function setLive(el, text) {
+  el.textContent = text;
+  el.scrollTop = el.scrollHeight;
+}
+
+// Recognition of system audio puts spaces between Japanese / Chinese words, which also hurts translation.
+const CJK = '\\u3000-\\u30ff\\u3400-\\u9fff\\uf900-\\ufaff\\uff00-\\uffef';
+const CJK_GAP = new RegExp(`(?<=[${CJK}])\\s+(?=[${CJK}])`, 'g');
+const tidy = (text) => (['JA', 'ZH'].includes(lang(srcSel).code) ? text.replace(CJK_GAP, '') : text).trim();
+
+// Each translation request gets a number so a slow interim preview can't overwrite a newer caption.
+let interimTimer = null, hearTimer = null, liveSeq = 0;
+let lastFinal = '', lastFinalAt = 0;
 async function handleFinal(text) {
-  text = text.trim();
+  text = tidy(text);
   if (!text) return;
-  liveSrc.textContent = text;
+  // Chrome sometimes delivers the same final result twice.
+  if (text === lastFinal && Date.now() - lastFinalAt < 10000) return;
+  lastFinal = text; lastFinalAt = Date.now();
+  clearTimeout(interimTimer);
+  const seq = ++liveSeq;
+  setLive(liveSrc, text);
   try {
     const t = await translate(text, lang(srcSel).tr, lang(dstSel).tr);
-    liveDst.textContent = t;
+    if (seq === liveSeq) setLive(liveDst, t);
     addHistory(text, t);
     speak(t);
   } catch {
@@ -207,12 +225,17 @@ function startRec() {
     document.body.classList.add('hearing');
     clearTimeout(hearTimer);
     hearTimer = setTimeout(() => document.body.classList.remove('hearing'), 900);
+    interim = tidy(interim);
     if (interim) {
-      liveSrc.textContent = interim;
+      setLive(liveSrc, interim);
       // Live preview translation of the partial sentence (throttled).
       clearTimeout(interimTimer);
       interimTimer = setTimeout(async () => {
-        try { liveDst.textContent = await translate(interim, lang(srcSel).tr, lang(dstSel).tr); } catch {}
+        const seq = ++liveSeq;
+        try {
+          const t = await translate(interim, lang(srcSel).tr, lang(dstSel).tr);
+          if (seq === liveSeq) setLive(liveDst, t);
+        } catch {}
       }, 400);
     }
   };
