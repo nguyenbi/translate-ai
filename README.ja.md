@@ -16,6 +16,7 @@
 | 読み上げ | 翻訳結果を音声で読み上げ（読み上げ中はマイクを一時停止） |
 | 履歴 | ブラウザに最大 500 件保存、1 文ずつコピー可能 |
 | アプリのインストール | 画面上部のボタンから：Android は APK をダウンロード、iPhone / iPad は Safari の「ホーム画面に追加」（Apple は Web サイトからのインストールを許可していないため）、パソコンは Chrome / Edge からインストール |
+| 拡張機能 | Chrome / Edge のサイドパネルで動作し、画面共有なしでタブの音声を聞き取り（`extension/`、`scripts/build-extension.ps1` でビルド。[extension/README.md](extension/README.md) 参照） |
 | フローティング表示 | 字幕を常に最前面の小さなウィンドウに表示（PC 版 Chrome / Edge） |
 | レポート出力 | HTML（印刷・PDF 保存）、CSV（Excel）、TXT |
 | AI レポート | 要約・要点・決定事項・ToDo・用語集を全文記録付きで出力。ご自身の Anthropic API キー（「レポート出力 → AI設定」で入力、ブラウザ内にのみ保存し `api.anthropic.com` にだけ送信）で Claude を使用。キーがない場合は Chrome 内蔵 AI（Gemini Nano、PC 版 Chrome のみ、直近約 6,000 文字まで） |

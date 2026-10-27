@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dịch Trực Tiếp — micro</title>
+  <link rel="icon" href="assets/icons/icon-192.png">
+  <style>
+    :root { color-scheme: light dark; --accent: #5b5cf0; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px; box-sizing: border-box;
+      font: 16px/1.55 "Segoe UI", system-ui, sans-serif; background: Canvas; color: CanvasText;
+    }
+    main { max-width: 440px; text-align: center; }
+    img { width: 64px; height: 64px; border-radius: 16px; }
+    h1 { font-size: 20px; margin: 12px 0 6px; }
+    p { margin: 0 0 18px; opacity: .8; }
+    button {
+      border: 0; border-radius: 99px; padding: 12px 24px; font: 600 16px inherit; color: #fff; cursor: pointer;
+      background: linear-gradient(135deg, #5b5cf0, #a855f7);
+    }
+    #msg { margin-top: 16px; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="assets/icons/icon-192.png" alt="">
+    <h1 id="title"></h1>
+    <p id="desc"></p>
+    <button id="allow" type="button"></button>
+    <p id="msg" role="status"></p>
+  </main>
+  <script src="mic.js"></script>
+</body>
+</html>

@@ -130,8 +130,8 @@ let rec = null, listening = false, speaking = false, wakeLock = null;
 let sysStream = null, sysTrack = null; // system audio captured via screen share
 
 const inputSel = $('input');
-// System audio capture only exists on desktop browsers.
-if (!navigator.mediaDevices?.getDisplayMedia) {
+// System audio capture only exists on desktop browsers (the extension captures tab audio instead).
+if (!window.EXT && !navigator.mediaDevices?.getDisplayMedia) {
   inputSel.querySelector('option[value="system"]').remove();
 }
 inputSel.value = store.get('input', 'mic');
@@ -150,6 +150,12 @@ if (!inputSel.querySelector('option[value="system"]')) {
 syncSeg();
 
 async function getSystemAudio() {
+  // Browser extension (extension/ext.js): capture the current tab's audio, no screen-share dialog.
+  if (window.EXT) {
+    const tab = await EXT.tabAudio();
+    tab.track.onended = () => { if (listening) stop('shareEnded'); };
+    return tab;
+  }
   // Chrome only shares system audio when "Entire screen" + "Share system audio" are chosen.
   const stream = await navigator.mediaDevices.getDisplayMedia({
     video: true,
@@ -296,7 +302,7 @@ function startRec() {
     }
   };
   rec.onerror = (e) => {
-    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') stop('micDenied');
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { stop('micDenied'); window.EXT?.micDenied(); }
     else if (e.error === 'network') setStatus('network');
   };
   // Browsers end recognition after silence; restart automatically to keep listening.
@@ -315,7 +321,7 @@ async function start() {
     try {
       ({ stream: sysStream, track: sysTrack } = await getSystemAudio());
     } catch (err) {
-      setStatus(err.message === 'no-audio' ? 'noAudio' : 'shareCancel');
+      setStatus(err.message === 'no-audio' ? 'noAudio' : window.EXT ? 'tabFail' : 'shareCancel');
       return;
     }
   }
@@ -383,7 +389,7 @@ addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installProm
 addEventListener('appinstalled', () => { installPrompt = null; $('pwaInstall').hidden = true; });
 $('apkLink').href = APK_URL;
 // Already running as an installed app: nothing to offer.
-if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) $('installBtn').hidden = true;
+if (window.EXT || matchMedia('(display-mode: standalone)').matches || navigator.standalone) $('installBtn').hidden = true;
 $('installBtn').onclick = () => {
   installDlg.querySelectorAll('.inst').forEach((d) => { d.open = d.dataset.os === os; });
   // Show the user's own platform first.
@@ -448,4 +454,5 @@ updateCodes();
 entries.forEach(renderEntry);
 applyUi();
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+// The extension ships its files itself, so it has no use for the offline cache.
+if ('serviceWorker' in navigator && !window.EXT) navigator.serviceWorker.register('sw.js').catch(() => {});

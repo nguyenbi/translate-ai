@@ -1,11 +1,12 @@
 // Network-first: always serve the latest deployed files, and fall back to the cache only when offline.
 // Translation itself always needs the network. Must stay at the site root so its scope covers the whole app.
-const CACHE = 'live-translate-v13';
+const CACHE = 'live-translate-v14';
 const SHELL = [
   './',
   'index.html',
   'manifest.webmanifest',
   'assets/css/style.css',
+  'assets/js/theme-init.js',
   'assets/js/logo.js',
   'assets/js/config.js',
   'assets/js/i18n.js',

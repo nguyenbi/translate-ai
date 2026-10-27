@@ -6,3 +6,6 @@ android/signing/
 *.keystore
 *.jks
 signing-key-info.txt
+
+# Extension build output (scripts/build-extension.ps1)
+dist/
