@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.1] - 2026-10-27
+
+### Changed
+- Nút "Xoá tất cả" thành menu Xoá: 24 giờ qua, 7 ngày qua, 30 ngày qua, Tất cả; hỏi xác nhận (kèm số câu) trước khi xoá
+
 ## [1.1.0] - 2026-10-27
 
 ### Added

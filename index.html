@@ -76,7 +76,7 @@
     <div class="hist-head">
       <h2><span data-i18n="history">Lịch sử</span> <span id="count" class="count"></span></h2>
       <div class="hist-actions">
-        <details class="export" id="export">
+        <details class="drop" id="export">
           <summary class="ghost accent">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
             <span data-i18n="export">Xuất báo cáo</span>
@@ -90,7 +90,19 @@
             <button type="button" id="aiSet" data-i18n="aiSettings">Cài đặt AI…</button>
           </div>
         </details>
-        <button id="clear" class="ghost" data-i18n="clear">Xoá tất cả</button>
+        <details class="drop" id="clearMenu">
+          <summary class="ghost">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>
+            <span data-i18n="clear">Xoá</span>
+          </summary>
+          <div class="menu">
+            <button type="button" data-hours="24" data-i18n="clear24h">24 giờ qua</button>
+            <button type="button" data-hours="168" data-i18n="clear7d">7 ngày qua</button>
+            <button type="button" data-hours="720" data-i18n="clear30d">30 ngày qua</button>
+            <hr>
+            <button type="button" data-hours="0" class="danger" data-i18n="clearAll">Tất cả</button>
+          </div>
+        </details>
       </div>
     </div>
     <ol id="history" class="history"></ol>
