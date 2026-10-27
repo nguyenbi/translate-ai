@@ -216,15 +216,25 @@ function renderEntry(e) {
   updateCount();
 }
 
+let speakId = 0;
 function speak(text) {
   if (!ttsBox.checked || !('speechSynthesis' in window)) return;
+  // Skip lines still waiting to be read, so reading out stays close to what is being said.
+  if (speechSynthesis.pending) speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = lang(dstSel).speech;
+  speechSynthesis.speak(u);
   // Pause the mic while speaking so the app doesn't translate its own voice.
+  // System / tab audio can't hear the speaker, so it keeps listening.
+  if (inputSel.value !== 'mic') return;
+  const id = ++speakId;
   speaking = true;
   rec?.abort();
-  u.onend = u.onerror = () => { speaking = false; if (listening) startRec(); };
-  speechSynthesis.speak(u);
+  u.onend = u.onerror = () => {
+    if (id !== speakId) return; // a newer line took over
+    speaking = false;
+    if (listening) startRec();
+  };
 }
 
 // The caption boxes have a fixed height; keep the newest line in view.
@@ -238,8 +248,40 @@ const CJK = '\\u3000-\\u30ff\\u3400-\\u9fff\\uf900-\\ufaff\\uff00-\\uffef';
 const CJK_GAP = new RegExp(`(?<=[${CJK}])\\s+(?=[${CJK}])`, 'g');
 const tidy = (text) => (['JA', 'ZH'].includes(lang(srcSel).code) ? text.replace(CJK_GAP, '') : text).trim();
 
+// The final result usually repeats the last preview, so recent translations are reused.
+const trCache = new Map();
+async function translateLive(text) {
+  const from = lang(srcSel).tr, to = lang(dstSel).tr, key = `${from}|${to}|${text}`;
+  if (trCache.has(key)) return trCache.get(key);
+  const t = await translate(text, from, to);
+  trCache.set(key, t);
+  if (trCache.size > 100) trCache.delete(trCache.keys().next().value);
+  return t;
+}
+
 // Each translation request gets a number so a slow interim preview can't overwrite a newer caption.
 let interimTimer = null, hearTimer = null, liveSeq = 0;
+
+// Live preview of the sentence being spoken: one request at a time, at most every PREVIEW_MS, always for
+// the newest text, so the translation keeps up while someone talks without pausing.
+const PREVIEW_MS = 300;
+let previewText = '', previewBusy = false, previewAt = 0;
+function previewTranslate(text) {
+  previewText = text;
+  if (previewBusy) return; // picked up when the current request finishes
+  clearTimeout(interimTimer);
+  const wait = PREVIEW_MS - (Date.now() - previewAt);
+  if (wait > 0) { interimTimer = setTimeout(() => previewTranslate(previewText), wait); return; }
+  previewBusy = true; previewAt = Date.now();
+  const seq = ++liveSeq;
+  translateLive(text)
+    .then((t) => { if (seq === liveSeq) setLive(liveDst, t); })
+    .catch(() => {})
+    .finally(() => {
+      previewBusy = false;
+      if (previewText && previewText !== text) previewTranslate(previewText);
+    });
+}
 // Final results are handled one at a time, in order, so a sentence that grows can update its own line.
 let lastFinal = '', lastFinalAt = 0, lastEntry = null, finalQueue = Promise.resolve();
 function handleFinal(text) {
@@ -256,15 +298,16 @@ async function processFinal(text) {
   const added = grows ? text.slice(lastFinal.length).trim() : text;
   lastFinal = text; lastFinalAt = Date.now();
   clearTimeout(interimTimer);
+  previewText = ''; // the preview of this sentence is done
   const seq = ++liveSeq;
   setLive(liveSrc, text);
   try {
-    const t = await translate(text, lang(srcSel).tr, lang(dstSel).tr);
+    const t = await translateLive(text);
     if (seq === liveSeq) setLive(liveDst, t);
     if (grows) updateHistory(lastEntry, text, t); else lastEntry = addHistory(text, t);
-    // Read out only the new words, not the whole sentence again.
+    // Read out only the new words, not the whole sentence again (without holding up the next result).
     if (!grows) speak(t);
-    else if (added && ttsBox.checked) speak(await translate(added, lang(srcSel).tr, lang(dstSel).tr));
+    else if (added && ttsBox.checked) translateLive(added).then(speak, () => {});
   } catch {
     setStatus('trFail');
   }
@@ -290,15 +333,7 @@ function startRec() {
     interim = tidy(interim);
     if (interim) {
       setLive(liveSrc, interim);
-      // Live preview translation of the partial sentence (throttled).
-      clearTimeout(interimTimer);
-      interimTimer = setTimeout(async () => {
-        const seq = ++liveSeq;
-        try {
-          const t = await translate(interim, lang(srcSel).tr, lang(dstSel).tr);
-          if (seq === liveSeq) setLive(liveDst, t);
-        } catch {}
-      }, 400);
+      previewTranslate(interim);
     }
   };
   rec.onerror = (e) => {
@@ -306,7 +341,7 @@ function startRec() {
     else if (e.error === 'network') setStatus('network');
   };
   // Browsers end recognition after silence; restart automatically to keep listening.
-  rec.onend = () => { if (listening && !speaking) setTimeout(startRec, 250); };
+  rec.onend = () => { if (listening && !speaking) setTimeout(startRec, 100); };
   try {
     if (sysTrack) rec.start(sysTrack); else rec.start();
   } catch {

@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Dịch nhanh hơn khi người nói không ngừng: bản dịch tạm cập nhật khoảng mỗi 0,3 giây thay vì đợi người nói dừng
+- Câu hoàn chỉnh dùng lại bản dịch tạm vừa có (không dịch lại), hiện gần như ngay lập tức
+- Đọc to: với âm thanh máy / tab không còn tạm dừng nghe khi đang đọc; bỏ các câu chờ đọc quá lâu để không bị trễ dần
+- Nhận dạng tự khởi động lại nhanh hơn (0,1 giây thay vì 0,25 giây) để ít mất chữ đầu câu
+
 ## [1.2.1] - 2026-10-27
 
 ### Added
