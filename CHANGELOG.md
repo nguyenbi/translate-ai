@@ -6,6 +6,9 @@
 - Extension Chrome / Edge (cài thủ công): app trong thanh bên, nghe âm thanh của tab không cần chia sẻ màn hình,
   trang cấp quyền micro; script đóng gói `scripts/build-extension.ps1`
 
+### Fixed
+- Nút Cài app ở góc trên bị mất icon (quy tắc ẩn icon của nút Sáng / Tối áp nhầm sang nút này)
+
 ### Changed
 - Đoạn script chọn giao diện Sáng / Tối chuyển từ `index.html` sang `assets/js/theme-init.js` (extension không cho script viết trong trang)
 
