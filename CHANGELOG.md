@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0] - 2026-10-27
+
+### Added
+- Báo cáo AI (HTML / in PDF): tóm tắt, ý chính, quyết định, việc cần làm, thuật ngữ song ngữ, kèm bản ghi đầy đủ
+- Hộp thoại Cài đặt AI: nhập Anthropic API key (chỉ lưu trong trình duyệt) và chọn model Claude (Opus / Sonnet / Haiku 5.5)
+- Không có key thì dùng AI có sẵn của Chrome (Gemini Nano) nếu máy hỗ trợ
+
+### Fixed
+- Giao diện không còn nhảy khi dịch cuộc họp: khung phụ đề có chiều cao cố định và luôn hiện dòng mới nhất, dòng trạng thái không xuống dòng
+- Bản dịch tạm đến muộn không còn ghi đè bản dịch của câu đã hoàn chỉnh
+- Bỏ qua câu bị Chrome trả về trùng 2 lần, nên lịch sử không còn câu lặp
+- Bỏ dấu cách thừa giữa các từ tiếng Nhật / tiếng Trung khi nghe âm thanh máy tính
+
 ## [1.0.2] - 2026-10-09
 
 ### Added
