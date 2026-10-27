@@ -96,10 +96,10 @@ h1 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -.01em; white
   border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); transition: color .2s;
 }
 .theme-btn:hover { color: var(--accent); }
-.theme-btn svg { display: none; }
-:root:not([data-theme]) .theme-btn .i-auto,
-:root[data-theme="light"] .theme-btn .i-light,
-:root[data-theme="dark"] .theme-btn .i-dark { display: block; }
+#theme svg { display: none; } /* only the icon of the current theme shows */
+:root:not([data-theme]) #theme .i-auto,
+:root[data-theme="light"] #theme .i-light,
+:root[data-theme="dark"] #theme .i-dark { display: block; }
 .live-pill {
   display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 99px;
   font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--muted);

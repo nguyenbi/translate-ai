@@ -10,6 +10,8 @@ Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi 
 - Cài app (nút ở góc trên): APK cho Android (`android/`), "Thêm vào MH chính" từ Safari cho iPhone / iPad
   (Apple không cho cài file từ website), cài từ Chrome / Edge trên máy tính.
   Khi build APK mới, sửa `APK_URL` trong `assets/js/config.js`.
+- Extension Chrome / Edge (`extension/`, build bằng `scripts/build-extension.ps1`): app trong thanh bên,
+  nghe âm thanh của tab không cần chia sẻ màn hình — xem [extension/README.md](extension/README.md)
 - Cửa sổ nổi (Chrome / Edge trên máy tính): bung khung phụ đề ra cửa sổ nhỏ luôn nằm trên cùng
 - Xuất báo cáo: HTML (in ra PDF), CSV (Excel), TXT
 - Báo cáo AI: tóm tắt, ý chính, quyết định, việc cần làm, thuật ngữ song ngữ, kèm bản ghi đầy đủ.

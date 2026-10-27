@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Dịch Trực Tiếp — Live Translate",
+  "short_name": "Dịch Live",
+  "version": "1.2.1",
+  "description": "Phụ đề dịch trực tiếp trong thanh bên: nghe micro hoặc âm thanh của tab (Nhật, Việt, Anh, Trung, Hàn, Thái).",
+  "icons": {
+    "16": "assets/icons/icon-192.png",
+    "48": "assets/icons/icon-192.png",
+    "128": "assets/icons/icon-192.png"
+  },
+  "action": { "default_title": "Dịch Trực Tiếp" },
+  "side_panel": { "default_path": "index.html" },
+  "background": { "service_worker": "background.js" },
+  "permissions": ["sidePanel", "tabCapture"],
+  "minimum_chrome_version": "116"
+}
