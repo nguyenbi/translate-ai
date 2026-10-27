@@ -1,6 +1,6 @@
 // Caches the app shell so it opens instantly; translation itself always needs the network.
 // Must stay at the site root so its scope covers the whole app.
-const CACHE = 'live-translate-v9';
+const CACHE = 'live-translate-v10';
 const SHELL = [
   './',
   'index.html',
