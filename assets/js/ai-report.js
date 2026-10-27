@@ -63,9 +63,12 @@ async function viaClaude(key, model, text) {
 }
 
 async function viaChrome(text) {
+  // The first use downloads the model (several GB); show how far it got.
+  const monitor = (m) => m.addEventListener('downloadprogress', (e) => toast(`${T().aiDownload} ${Math.round(e.loaded * 100)}%`, true));
   let s;
   // The on-device model only supports a few output languages; fall back to the default session.
-  try { s = await LanguageModel.create({ expectedOutputs: [{ type: 'text', languages: [ui] }] }); } catch { s = await LanguageModel.create(); }
+  try { s = await LanguageModel.create({ monitor, expectedOutputs: [{ type: 'text', languages: [ui] }] }); } catch { s = await LanguageModel.create({ monitor }); }
+  toast(T().aiWorking, true);
   try { return JSON.parse(await s.prompt(aiPrompt(text), { responseConstraint: AI_SCHEMA })); } finally { s.destroy(); }
 }
 
@@ -95,26 +98,27 @@ function aiIntro(ai, engine, used) {
   return `<section class="ai">${parts.join('')}</section><h2 class="tr">${esc(t.aTranscript)}</h2>`;
 }
 
+// useChrome: the user picked Chrome's built-in AI in the dialog (needs that click to start the download).
 let aiBusy = false;
-async function aiReport() {
+async function aiReport(useChrome = false) {
   if (aiBusy) return;
-  if (!entries.length) { setStatus('noData'); return; }
+  if (!entries.length) { notify('noData'); return; }
   const key = store.get(AI_KEY, '');
-  let list = entries, engine, run, chrome = '';
-  if (key) {
+  let list = entries, engine, run;
+  if (key && !useChrome) {
     const model = aiModelSel.value;
     engine = `Claude (${model})`;
     run = (text) => viaClaude(key, model, text);
-  } else if ((chrome = await chromeAi())) {
+  } else if (useChrome) {
     list = latest();
     engine = 'Chrome AI (Gemini Nano)';
     run = viaChrome;
   } else {
-    openAiDlg('aiNeedKey');
+    openAiDlg(true); // no key: let the user enter one or choose Chrome's AI
     return;
   }
   aiBusy = true;
-  setStatus(chrome && chrome !== 'available' ? 'aiDownload' : 'aiWorking');
+  notify(useChrome && (await chromeAi()) !== 'available' ? 'aiDownload' : 'aiWorking', true);
   try {
     const ai = await run(transcript(list));
     const t = T();
@@ -124,33 +128,42 @@ async function aiReport() {
       intro: aiIntro(ai, engine, list.length),
     });
     download(`live-translate-ai-report-${stamp()}.html`, html, 'text/html;charset=utf-8');
-    setStatus('exported');
+    notify('exported');
   } catch (err) {
     console.error('AI report failed:', err);
-    setStatus(err.message === 'aiBadKey' ? 'aiBadKey' : 'aiFail');
+    notify(err.message === 'aiBadKey' ? 'aiBadKey' : useChrome ? 'aiChromeFail' : 'aiFail');
   } finally {
     aiBusy = false;
   }
 }
 
-async function openAiDlg(msgKey) {
+// forReport: opened by the AI report button without a key; saving a key then runs the report.
+let aiPending = false;
+async function openAiDlg(forReport = false) {
+  aiPending = forReport;
   aiKeyIn.value = store.get(AI_KEY, '');
+  $('aiNeed').hidden = !forReport;
   $('aiChrome').textContent = '';
-  if (msgKey) setStatus(msgKey);
+  $('aiUseChrome').hidden = true;
   aiDlg.returnValue = ''; // Esc keeps the previous value otherwise
   aiDlg.showModal();
   const chrome = await chromeAi();
   $('aiChrome').textContent = T()[chrome === 'available' ? 'dChromeOk' : chrome ? 'dChromeDl' : 'dChromeNo'];
+  $('aiUseChrome').hidden = !(forReport && chrome);
 }
 
 aiDlg.onclose = () => {
-  if (aiDlg.returnValue === 'save') {
+  const action = aiDlg.returnValue, pending = aiPending;
+  aiPending = false;
+  if (action === 'save') {
     store.set(AI_KEY, aiKeyIn.value.trim());
     store.set(AI_MODEL, aiModelSel.value);
-    setStatus('aiSaved');
-  } else if (aiDlg.returnValue === 'remove') {
+    if (pending && store.get(AI_KEY, '')) aiReport(); else notify('aiSaved');
+  } else if (action === 'remove') {
     store.set(AI_KEY, '');
-    setStatus('aiRemoved');
+    notify('aiRemoved');
+  } else if (action === 'chrome') {
+    aiReport(true);
   } else {
     aiModelSel.value = store.get(AI_MODEL, aiModelSel.options[0].value);
   }
@@ -159,5 +172,6 @@ aiDlg.onclose = () => {
 // Only "save" submits the form, so Enter in the key field saves instead of removing the key.
 $('aiRemove').onclick = () => aiDlg.close('remove');
 $('aiClose').onclick = () => aiDlg.close();
+$('aiUseChrome').onclick = () => aiDlg.close('chrome');
 $('aiRun').onclick = () => { $('export').open = false; aiReport(); };
 $('aiSet').onclick = () => { $('export').open = false; openAiDlg(); };

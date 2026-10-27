@@ -1,6 +1,6 @@
 // Network-first: always serve the latest deployed files, and fall back to the cache only when offline.
 // Translation itself always needs the network. Must stay at the site root so its scope covers the whole app.
-const CACHE = 'live-translate-v11';
+const CACHE = 'live-translate-v13';
 const SHELL = [
   './',
   'index.html',
@@ -29,6 +29,7 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET' || url.origin !== location.origin) return; // translation / AI APIs: network only
+  if (url.pathname.endsWith('.apk')) return; // downloads: don't keep a copy in the cache
   e.respondWith(
     fetch(e.request, { cache: 'no-cache' })
       .then((res) => {

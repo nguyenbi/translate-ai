@@ -2,6 +2,9 @@
 // Change AUTHOR to the name shown in the app and in exported reports.
 const AUTHOR = 'Nguyen Bi';
 
+// Android package offered in the "Install app" dialog (see android/README.md). Update when a new APK is built.
+const APK_URL = 'android/translate-ai-1.0.1.apk';
+
 // code: badge label, speech: Web Speech API locale, tr: translation API code
 const LANGS = [
   { code: 'JA', name: { vi: 'Tiếng Nhật', ja: '日本語' }, speech: 'ja-JP', tr: 'ja' },

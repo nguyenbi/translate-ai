@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0] - 2026-10-27
+
+### Added
+- Cửa sổ nổi (máy tính, Chrome / Edge): nút ở góc khung phụ đề bung phụ đề ra một cửa sổ nhỏ luôn nằm trên cùng
+- Nút Cài app ở góc trên: tải APK cho Android, hướng dẫn "Thêm vào MH chính" cho iPhone / iPad, cài app trên máy tính
+  (tự mở đúng mục theo loại máy)
+- Thông báo nổi (toast) cho tiến trình và lỗi của Báo cáo AI, kèm % khi Chrome tải model AI lần đầu
+
+### Fixed
+- Báo cáo AI khi chưa có API key không còn "im lặng": mở hộp thoại cho nhập key hoặc chọn dùng AI của Chrome
+- Chrome trên Android: câu không còn bị lưu lặp và dài dần; cập nhật lại dòng đang nói, đọc to chỉ phần mới
+
 ## [1.1.3] - 2026-10-27
 
 ### Fixed
