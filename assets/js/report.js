@@ -14,12 +14,13 @@ function download(name, content, type) {
 const pairs = () => [...new Set(entries.map((e) => `${e.s} → ${e.d}`))].join(', ');
 const sourceName = () => (inputSel.value === 'system' ? T().srcSys : T().srcMic);
 
-function reportHtml() {
+// The AI report passes title, meta (extra <div> cells) and intro (HTML placed above the table).
+function reportHtml({ title, meta = '', intro = '' } = {}) {
   const t = T(), now = new Date().toISOString(), year = new Date().getFullYear();
   const rows = entries.map((e, i) => `<tr><td class="n">${i + 1}</td><td class="tm">${esc(fmtDateTime(e.at))}</td>`
     + `<td><span class="code">${esc(e.s)}</span>${esc(e.o)}</td><td><span class="code a">${esc(e.d)}</span>${esc(e.t)}</td></tr>`).join('');
   return `<!doctype html><html lang="${ui}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(t.rTitle)} ${stamp()}</title><style>
+<title>${esc(title || t.rTitle)} ${stamp()}</title><style>
 body{margin:0;background:#f3f4fa;color:#141726;font:14px/1.6 "Be Vietnam Pro","Noto Sans JP","Segoe UI",system-ui,sans-serif}
 .page{max-width:900px;margin:24px auto;background:#fff;border-radius:18px;padding:32px 36px;box-shadow:0 10px 30px -12px rgba(30,35,90,.2)}
 header{display:flex;align-items:center;gap:16px;border-bottom:2px solid #eef0f8;padding-bottom:18px}
@@ -32,15 +33,17 @@ th:first-child{border-radius:10px 0 0 0}th:last-child{border-radius:0 10px 0 0}
 td{padding:9px 10px;border-bottom:1px solid #eef0f8;vertical-align:top}tr:nth-child(even) td{background:#fafbfe}
 .n{color:#6a7088;width:36px}.tm{white-space:nowrap;color:#6a7088;width:150px}
 .code{display:inline-block;font-size:10px;font-weight:700;background:#eef0f8;color:#6a7088;border-radius:5px;padding:0 6px;margin-right:6px}.code.a{background:#ecebff;color:#5b5cf0}
+.ai h2,h2.tr{margin:24px 0 8px;font-size:15px}.ai h2{color:#5b5cf0}.ai p{margin:0}.ai ul{margin:0;padding-left:20px}
+.ai .note{margin-top:14px;color:#6a7088;font-size:12px}
 footer{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;color:#6a7088;font-size:12px}
 footer img{width:22px;height:22px;border-radius:50%;object-fit:cover}
 .print{position:fixed;right:20px;bottom:20px;border:0;border-radius:99px;padding:12px 20px;color:#fff;font:600 14px inherit;background:linear-gradient(135deg,#5b5cf0,#a855f7);cursor:pointer}
 @media print{body{background:#fff}.page{box-shadow:none;margin:0;max-width:none;padding:0}.print{display:none}th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style></head><body><div class="page">
-<header><img src="${LOGO}" alt=""><div><h1>${esc(t.rTitle)}</h1><p class="sub">${esc(t.title)} · ${esc(AUTHOR)}</p></div></header>
+<header><img src="${LOGO}" alt=""><div><h1>${esc(title || t.rTitle)}</h1><p class="sub">${esc(t.title)} · ${esc(AUTHOR)}</p></div></header>
 <section class="meta"><div><b>${esc(t.rCreated)}</b>${esc(fmtDateTime(now))}</div><div><b>${esc(t.rPair)}</b>${esc(pairs())}</div>
-<div><b>${esc(t.rSource)}</b>${esc(sourceName())}</div><div><b>${esc(t.rCount)}</b>${entries.length}</div></section>
-<table><thead><tr><th>${esc(t.rNo)}</th><th>${esc(t.rTime)}</th><th>${esc(t.rOrig)}</th><th>${esc(t.rTrans)}</th></tr></thead><tbody>${rows}</tbody></table>
+<div><b>${esc(t.rSource)}</b>${esc(sourceName())}</div><div><b>${esc(t.rCount)}</b>${entries.length}</div>${meta}</section>
+${intro}<table><thead><tr><th>${esc(t.rNo)}</th><th>${esc(t.rTime)}</th><th>${esc(t.rOrig)}</th><th>${esc(t.rTrans)}</th></tr></thead><tbody>${rows}</tbody></table>
 <footer><img src="${LOGO}" alt=""><span>${esc(t.credit(year, AUTHOR))}</span></footer>
 </div><button class="print" onclick="print()">${esc(t.rPrint)}</button></body></html>`;
 }
@@ -60,7 +63,7 @@ function reportTxt() {
   return [...head, ...body, '', t.credit(new Date().getFullYear(), AUTHOR)].join('\r\n');
 }
 
-document.querySelectorAll('#export .menu button').forEach((b) => b.onclick = () => {
+document.querySelectorAll('#export .menu [data-fmt]').forEach((b) => b.onclick = () => {
   $('export').open = false;
   if (!entries.length) { setStatus('noData'); return; }
   const base = `live-translate-report-${stamp()}`;

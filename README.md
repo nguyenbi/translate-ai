@@ -8,6 +8,10 @@ Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi 
 - Dịch: Google Translate (bản miễn phí), dự phòng MyMemory
 - Ngôn ngữ: Nhật, Việt, Anh, Trung, Hàn, Thái — giao diện tiếng Việt / tiếng Nhật
 - Xuất báo cáo: HTML (in ra PDF), CSV (Excel), TXT
+- Báo cáo AI: tóm tắt, ý chính, quyết định, việc cần làm, thuật ngữ song ngữ, kèm bản ghi đầy đủ.
+  Dùng Claude với Anthropic API key của người dùng (nhập ở *Xuất báo cáo → Cài đặt AI*, key chỉ lưu trong
+  trình duyệt và chỉ gửi tới `api.anthropic.com`). Không có key thì dùng AI có sẵn của Chrome
+  (Gemini Nano, chỉ Chrome PC hỗ trợ, đọc được khoảng 6.000 ký tự gần nhất).
 
 ## Cấu trúc thư mục
 
@@ -26,7 +30,8 @@ Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi 
 │       ├── i18n.js         # Chữ hiển thị tiếng Việt / tiếng Nhật
 │       ├── logo.js         # Logo đã nhúng base64 (sinh tự động)
 │       ├── app.js          # Nhận dạng giọng nói, dịch, lịch sử, giao diện
-│       └── report.js       # Xuất báo cáo HTML / CSV / TXT
+│       ├── report.js       # Xuất báo cáo HTML / CSV / TXT
+│       └── ai-report.js    # Báo cáo AI (Claude API / AI có sẵn của Chrome), hộp thoại Cài đặt AI
 ├── android/                # APK / AAB (khoá ký trong android/signing/ không đưa lên git)
 └── scripts/make-logo.ps1   # Nhúng logo.png vào logo.js
 ```

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Báo cáo AI (HTML / in PDF): tóm tắt, ý chính, quyết định, việc cần làm, thuật ngữ song ngữ, kèm bản ghi đầy đủ
+- Hộp thoại Cài đặt AI: nhập Anthropic API key (chỉ lưu trong trình duyệt) và chọn model Claude (Opus / Sonnet / Haiku 5.5)
+- Không có key thì dùng AI có sẵn của Chrome (Gemini Nano) nếu máy hỗ trợ
+
 ## [1.0.2] - 2026-10-09
 
 ### Added
