@@ -53,8 +53,31 @@ function applyUi() {
   historyEl.querySelectorAll('.copy').forEach((b) => { b.textContent = t.copy; });
   document.querySelectorAll('#uiLang button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.ui === ui));
   $('credit').textContent = t.credit(new Date().getFullYear(), AUTHOR);
+  syncTheme();
   setStatus(statusKey);
 }
+
+// ---------- Light / dark theme: auto (follow the device) -> light -> dark ----------
+// The inline script in index.html applies the saved theme before the first paint.
+const THEMES = ['auto', 'light', 'dark'];
+const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+let theme = THEMES.includes(store.get('theme', 'auto')) ? store.get('theme', 'auto') : 'auto';
+
+function syncTheme() {
+  const root = document.documentElement;
+  if (theme === 'auto') delete root.dataset.theme; else root.dataset.theme = theme;
+  const dark = theme === 'dark' || (theme === 'auto' && darkQuery.matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? '#0d0f1a' : '#f3f4fa';
+  const label = T().theme(T()[`theme_${theme}`]);
+  $('theme').setAttribute('aria-label', label);
+  $('theme').title = label;
+}
+$('theme').onclick = () => {
+  theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+  store.set('theme', theme);
+  syncTheme();
+};
+darkQuery.addEventListener('change', syncTheme);
 
 // ---------- Author logo (embedded logo.js, or initials as a fallback) ----------
 function initialsLogo() {
