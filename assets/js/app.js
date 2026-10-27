@@ -296,10 +296,25 @@ $('swap').onclick = () => {
   [srcSel.value, dstSel.value] = [dstSel.value, srcSel.value];
   onLangChange();
 };
-$('clear').onclick = () => {
-  entries = []; saveEntries();
-  historyEl.innerHTML = ''; updateCount(); liveSrc.textContent = ''; liveDst.textContent = '';
-};
+// Delete the history of the last N hours (0 = everything), after confirming.
+function clearHistory(hours, label) {
+  const since = hours ? Date.now() - hours * 3600e3 : 0;
+  const keep = entries.filter((e) => new Date(e.at).getTime() < since);
+  const n = entries.length - keep.length;
+  if (!n) { setStatus('noneToClear'); return; }
+  if (!confirm(T().confirmClear(n, label))) return;
+  entries = keep; saveEntries();
+  historyEl.innerHTML = '';
+  entries.forEach(renderEntry);
+  updateCount();
+  if (!hours) { liveSrc.textContent = ''; liveDst.textContent = ''; }
+  setStatus('cleared');
+}
+document.querySelectorAll('#clearMenu [data-hours]').forEach((b) => b.onclick = () => {
+  $('clearMenu').open = false;
+  clearHistory(+b.dataset.hours, b.textContent);
+});
+document.addEventListener('click', (e) => { if (!e.target.closest('#clearMenu')) $('clearMenu').open = false; });
 
 // Re-acquire wake lock when returning to the app.
 document.addEventListener('visibilitychange', async () => {

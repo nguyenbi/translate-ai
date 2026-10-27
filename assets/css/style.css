@@ -166,20 +166,22 @@ h2 { margin: 0; font-size: 15px; font-weight: 700; }
 .ghost:hover { background: var(--surface-2); color: var(--danger); }
 .hist-actions { display: flex; align-items: center; gap: 4px; }
 .ghost.accent { color: var(--accent); font-weight: 600; }
-.export { position: relative; }
-.export summary { list-style: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; }
-.export summary::-webkit-details-marker { display: none; }
-.export .menu {
+.drop { position: relative; }
+.drop summary { list-style: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; }
+.drop summary::-webkit-details-marker { display: none; }
+.drop .menu {
   position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; min-width: 220px; padding: 6px;
   background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow);
   display: flex; flex-direction: column;
 }
-.export .menu button {
+.drop .menu button {
   border: 0; background: none; text-align: left; padding: 10px 12px; border-radius: 10px; font-size: 14px;
 }
-.export .menu button:hover { background: var(--accent-soft); color: var(--accent); }
-.export .menu hr { width: 100%; margin: 4px 0; border: 0; border-top: 1px solid var(--border); }
-.export .menu .ai-item { color: var(--accent); font-weight: 600; }
+.drop .menu button:hover { background: var(--accent-soft); color: var(--accent); }
+.drop .menu hr { width: 100%; margin: 4px 0; border: 0; border-top: 1px solid var(--border); }
+.drop .menu .ai-item { color: var(--accent); font-weight: 600; }
+.drop .menu .danger, .drop .menu .danger:hover { color: var(--danger); }
+#clearMenu .menu { min-width: 170px; }
 
 /* AI settings dialog */
 .dlg {
