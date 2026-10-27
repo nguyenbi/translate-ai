@@ -7,6 +7,7 @@ Web app (PWA) nghe âm thanh xung quanh hoặc âm thanh trong máy tính rồi 
 - Nhận dạng giọng nói: Web Speech API của trình duyệt (cần Internet)
 - Dịch: Google Translate (bản miễn phí), dự phòng MyMemory
 - Ngôn ngữ: Nhật, Việt, Anh, Trung, Hàn, Thái — giao diện tiếng Việt / tiếng Nhật
+- Cửa sổ nổi (Chrome / Edge trên máy tính): bung khung phụ đề ra cửa sổ nhỏ luôn nằm trên cùng
 - Xuất báo cáo: HTML (in ra PDF), CSV (Excel), TXT
 - Báo cáo AI: tóm tắt, ý chính, quyết định, việc cần làm, thuật ngữ song ngữ, kèm bản ghi đầy đủ.
   Dùng Claude với Anthropic API key của người dùng (nhập ở *Xuất báo cáo → Cài đặt AI*, key chỉ lưu trong

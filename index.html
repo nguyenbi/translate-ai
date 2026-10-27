@@ -75,7 +75,12 @@
     <section id="live" class="card live" aria-live="polite">
       <div class="live-head">
         <span class="badge" id="srcCode">JA</span>
-        <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="live-tools">
+          <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <button type="button" id="pip" class="pip-btn" data-i18n-aria="pip" hidden>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="12" width="7" height="5" rx="1" fill="currentColor"/></g></svg>
+          </button>
+        </div>
       </div>
       <p id="liveSrc" class="live-src"></p>
       <div class="divider"><span class="badge accent" id="dstCode">VI</span></div>
@@ -137,9 +142,12 @@
     </div>
   </footer>
 
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
   <dialog id="aiDlg" class="dlg">
     <form method="dialog">
       <h3 data-i18n="dTitle">Cài đặt báo cáo AI</h3>
+      <p id="aiNeed" class="dlg-need" data-i18n="aiNeedKey" hidden></p>
       <p class="dlg-desc" data-i18n="dDesc"></p>
       <label class="field">
         <span data-i18n="dKey">Anthropic API key</span>
@@ -154,6 +162,7 @@
         </select>
       </label>
       <p id="aiChrome" class="dlg-note"></p>
+      <button type="button" id="aiUseChrome" class="ghost accent dlg-chrome" data-i18n="dUseChrome" hidden>Dùng AI của Chrome (miễn phí)</button>
       <div class="dlg-actions">
         <button type="button" id="aiRemove" class="ghost" data-i18n="dRemove">Xoá key</button>
         <span></span>

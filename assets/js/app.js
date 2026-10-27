@@ -32,6 +32,17 @@ function setStatus(key) {
   statusEl.textContent = typeof msg === 'function' ? msg(langName(srcSel), langName(dstSel)) : msg;
 }
 
+// Progress and errors go to a toast: the status line under the title is too narrow for them.
+const toastEl = $('toast');
+let toastTimer = null;
+function toast(text, sticky = false) {
+  toastEl.textContent = text;
+  toastEl.hidden = false;
+  clearTimeout(toastTimer);
+  if (!sticky) toastTimer = setTimeout(() => { toastEl.hidden = true; }, 5000);
+}
+function notify(key, sticky) { setStatus(key); toast(T()[key], sticky); }
+
 function updateCodes() {
   const s = lang(srcSel).code, d = lang(dstSel).code;
   $('srcCode').textContent = s; $('dstCode').textContent = d; $('pair').textContent = `${s} → ${d}`;
@@ -53,6 +64,7 @@ function applyUi() {
   historyEl.querySelectorAll('.copy').forEach((b) => { b.textContent = t.copy; });
   document.querySelectorAll('#uiLang button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.ui === ui));
   $('credit').textContent = t.credit(new Date().getFullYear(), AUTHOR);
+  $('pip').title = t.pip;
   syncTheme();
   setStatus(statusKey);
 }
@@ -163,24 +175,34 @@ const locale = () => (ui === 'ja' ? 'ja-JP' : 'vi-VN');
 const fmtTime = (iso) => new Date(iso).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 const fmtDateTime = (iso) => new Date(iso).toLocaleString(locale());
 
+const entryLi = new WeakMap(); // history entry -> its <li>, so a growing sentence can update its line
+
 function addHistory(orig, trans) {
   const e = { at: new Date().toISOString(), o: orig, t: trans, s: lang(srcSel).code, d: lang(dstSel).code };
   entries.push(e);
   saveEntries();
   renderEntry(e);
+  return e;
 }
 
-function renderEntry({ at, o: orig, t: trans }) {
+function updateHistory(e, orig, trans) {
+  e.o = orig; e.t = trans;
+  saveEntries();
+  const li = entryLi.get(e);
+  if (li) { li.querySelector('.o').textContent = orig; li.querySelector('.t').textContent = trans; }
+}
+
+function renderEntry(e) {
   const li = document.createElement('li');
-  const time = fmtTime(at);
+  entryLi.set(e, li);
   li.innerHTML = `<div class="h-meta"><time></time><button class="copy" type="button"></button></div><p class="o"></p><p class="t"></p>`;
-  li.querySelector('time').textContent = time;
-  li.querySelector('.o').textContent = orig;
-  li.querySelector('.t').textContent = trans;
+  li.querySelector('time').textContent = fmtTime(e.at);
+  li.querySelector('.o').textContent = e.o;
+  li.querySelector('.t').textContent = e.t;
   const copyBtn = li.querySelector('.copy');
   copyBtn.textContent = T().copy;
   copyBtn.onclick = async () => {
-    try { await navigator.clipboard.writeText(trans); copyBtn.textContent = T().copied; } catch {}
+    try { await navigator.clipboard.writeText(e.t); copyBtn.textContent = T().copied; } catch {}
     setTimeout(() => { copyBtn.textContent = T().copy; }, 1500);
   };
   historyEl.prepend(li);
@@ -211,12 +233,20 @@ const tidy = (text) => (['JA', 'ZH'].includes(lang(srcSel).code) ? text.replace(
 
 // Each translation request gets a number so a slow interim preview can't overwrite a newer caption.
 let interimTimer = null, hearTimer = null, liveSeq = 0;
-let lastFinal = '', lastFinalAt = 0;
-async function handleFinal(text) {
+// Final results are handled one at a time, in order, so a sentence that grows can update its own line.
+let lastFinal = '', lastFinalAt = 0, lastEntry = null, finalQueue = Promise.resolve();
+function handleFinal(text) {
   text = tidy(text);
-  if (!text) return;
+  if (text) finalQueue = finalQueue.then(() => processFinal(text));
+}
+
+async function processFinal(text) {
+  const recent = Date.now() - lastFinalAt < 10000;
   // Chrome sometimes delivers the same final result twice.
-  if (text === lastFinal && Date.now() - lastFinalAt < 10000) return;
+  if (recent && text === lastFinal) return;
+  // Chrome on Android repeats the whole sentence so far in each final result: update that line instead of adding one.
+  const grows = recent && lastEntry && lastFinal && text.toLowerCase().startsWith(lastFinal.toLowerCase());
+  const added = grows ? text.slice(lastFinal.length).trim() : text;
   lastFinal = text; lastFinalAt = Date.now();
   clearTimeout(interimTimer);
   const seq = ++liveSeq;
@@ -224,8 +254,10 @@ async function handleFinal(text) {
   try {
     const t = await translate(text, lang(srcSel).tr, lang(dstSel).tr);
     if (seq === liveSeq) setLive(liveDst, t);
-    addHistory(text, t);
-    speak(t);
+    if (grows) updateHistory(lastEntry, text, t); else lastEntry = addHistory(text, t);
+    // Read out only the new words, not the whole sentence again.
+    if (!grows) speak(t);
+    else if (added && ttsBox.checked) speak(await translate(added, lang(srcSel).tr, lang(dstSel).tr));
   } catch {
     setStatus('trFail');
   }
@@ -327,6 +359,7 @@ function clearHistory(hours, label) {
   if (!n) { setStatus('noneToClear'); return; }
   if (!confirm(T().confirmClear(n, label))) return;
   entries = keep; saveEntries();
+  if (!entries.includes(lastEntry)) lastEntry = null;
   historyEl.innerHTML = '';
   entries.forEach(renderEntry);
   updateCount();
@@ -338,6 +371,44 @@ document.querySelectorAll('#clearMenu [data-hours]').forEach((b) => b.onclick = 
   clearHistory(+b.dataset.hours, b.textContent);
 });
 document.addEventListener('click', (e) => { if (!e.target.closest('#clearMenu')) $('clearMenu').open = false; });
+
+// ---------- Floating caption window (Document Picture-in-Picture: Chrome / Edge on desktop) ----------
+// The live card itself moves into an always-on-top window and comes back when it closes,
+// so captions keep updating without any extra code.
+const pipBtn = $('pip');
+if ('documentPictureInPicture' in window) {
+  pipBtn.hidden = false;
+  pipBtn.onclick = async () => {
+    if (documentPictureInPicture.window) { documentPictureInPicture.window.close(); return; }
+    const live = $('live'), spot = document.createComment('live');
+    let pip;
+    try { pip = await documentPictureInPicture.requestWindow({ width: 460, height: 300 }); } catch (err) {
+      console.error('Floating window failed:', err);
+      notify('pipFail');
+      return;
+    }
+    document.querySelectorAll('link[rel="stylesheet"]').forEach((l) => pip.document.head.append(l.cloneNode()));
+    pip.document.title = T().title;
+    // Keep the theme and the listening state (wave animation, placeholders) in sync with the main window.
+    const sync = () => {
+      pip.document.documentElement.lang = document.documentElement.lang;
+      if (document.documentElement.dataset.theme) pip.document.documentElement.dataset.theme = document.documentElement.dataset.theme;
+      else delete pip.document.documentElement.dataset.theme;
+      pip.document.body.className = `${document.body.className} pip`;
+    };
+    const obs = new MutationObserver(sync);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'lang'] });
+    obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    sync();
+    live.before(spot);
+    pip.document.body.append(live);
+    setLive(liveSrc, liveSrc.textContent); setLive(liveDst, liveDst.textContent);
+    pip.addEventListener('pagehide', () => {
+      obs.disconnect();
+      spot.replaceWith(live);
+    });
+  };
+}
 
 // Re-acquire wake lock when returning to the app.
 document.addEventListener('visibilitychange', async () => {

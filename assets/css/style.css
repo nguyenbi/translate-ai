@@ -225,7 +225,23 @@ h2 { margin: 0; font-size: 15px; font-weight: 700; }
   padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); font-size: 15px; font-weight: 400;
 }
 .field input:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.dlg-need {
+  margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;
+  background: var(--accent-soft); color: var(--accent);
+}
+.dlg-chrome { display: block; width: 100%; margin: -6px 0 14px; padding: 10px; font-size: 14px; background: var(--accent-soft); border-radius: 12px; }
+.dlg-chrome:hover { color: var(--accent); }
+.dlg-chrome[hidden] { display: none; }
 .dlg-actions { display: flex; align-items: center; gap: 6px; }
+
+/* Toast: progress and errors that don't fit in the status line */
+.toast {
+  position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 14px); transform: translateX(-50%); z-index: 50;
+  width: max-content; max-width: calc(100vw - 32px); padding: 10px 16px; border-radius: 14px;
+  background: var(--surface-2); color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow);
+  font-size: 14px; font-weight: 500;
+}
+.toast[hidden] { display: none; }
 .dlg-actions span { flex: 1; }
 .primary {
   border: 0; border-radius: 99px; padding: 9px 20px; font-weight: 600; color: #fff;
@@ -288,6 +304,20 @@ h2 { margin: 0; font-size: 15px; font-weight: 700; }
 .listening .mic::before { animation: ring 1.8s ease-out infinite; }
 .listening .mic::after { animation: ring 1.8s ease-out .9s infinite; }
 @keyframes ring { from { transform: scale(1); opacity: .6; } to { transform: scale(1.7); opacity: 0; } }
+
+/* Floating caption window (Document Picture-in-Picture): the live card fills the small window */
+.live-tools { display: flex; align-items: center; gap: 10px; }
+.pip-btn {
+  width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center;
+  border: 0; background: var(--surface-2); color: var(--muted);
+}
+.pip-btn:hover { color: var(--accent); }
+.pip-btn[hidden] { display: none; }
+body.pip { min-height: 0; padding: 8px; overflow: hidden; }
+body.pip .live { height: calc(100vh - 16px); min-height: 0; margin: 0; padding: 12px 16px 14px; }
+body.pip .live-src { height: auto; max-height: calc(1.55em * 2); flex-shrink: 0; }
+body.pip .divider { margin: 8px 0 6px; }
+body.pip .live-dst { height: auto; flex: 1; min-height: 0; font-size: clamp(18px, 6.5vw, 34px); }
 
 @media (max-width: 420px) {
   .live-pill { padding: 8px; }
