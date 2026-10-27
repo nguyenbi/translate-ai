@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Dịch Trực Tiếp — Live Translate",
   "short_name": "Dịch Live",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Phụ đề dịch trực tiếp trong thanh bên: nghe micro hoặc âm thanh của tab (Nhật, Việt, Anh, Trung, Hàn, Thái).",
   "icons": {
     "16": "assets/icons/icon-192.png",

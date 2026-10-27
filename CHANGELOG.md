@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.1] - 2026-10-27
 
 ### Added
 - Extension Chrome / Edge (cài thủ công): app trong thanh bên, nghe âm thanh của tab không cần chia sẻ màn hình,
