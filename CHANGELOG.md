@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.2] - 2026-10-27
 
 ### Fixed
 - Dịch nhanh hơn khi người nói không ngừng: bản dịch tạm cập nhật khoảng mỗi 0,3 giây thay vì đợi người nói dừng
